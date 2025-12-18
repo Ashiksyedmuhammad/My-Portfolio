@@ -123,6 +123,7 @@ export const DATA = {
       ],
       links: [
         {
+          label: "Source",
           type: "Source",
           href: "https://github.com/Ashiksyedmuhammad/ChatApplication",
           icon: <Icons.github className="size-3" />,
@@ -149,6 +150,7 @@ export const DATA = {
       ],
       links: [
         {
+          label: "Source",
           type: "Source",
           href: "https://github.com/Ashiksyedmuhammad/WatchAura",
           icon: <Icons.github className="size-3" />,
@@ -178,6 +180,7 @@ export const DATA = {
       ],
       links: [
         {
+          label: "Source",
           type: "Source",
           href: "https://github.com/Ashiksyedmuhammad/React_User_Management",
           icon: <Icons.github className="size-3" />,
