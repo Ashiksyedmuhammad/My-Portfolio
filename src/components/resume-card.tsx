@@ -2,7 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardHeader } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { ChevronRightIcon } from "lucide-react";
@@ -19,7 +19,8 @@ interface ResumeCardProps {
   period: string;
   description?: string;
 }
-export const ResumeCard = ({
+
+export function ResumeCard({
   logoUrl,
   altText,
   title,
@@ -28,83 +29,108 @@ export const ResumeCard = ({
   badges,
   period,
   description,
-}: ResumeCardProps) => {
-  const [isExpanded, setIsExpanded] = React.useState(false);
+}: ResumeCardProps) {
+  const [expanded, setExpanded] = React.useState(false);
+  const isExpandable = Boolean(description);
 
-  const handleClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    if (description) {
+  const handleClick = (e: React.MouseEvent) => {
+    if (isExpandable) {
       e.preventDefault();
-      setIsExpanded(!isExpanded);
+      setExpanded((v) => !v);
     }
   };
 
   return (
     <Link
-      href={href || "#"}
-      className="block cursor-pointer"
+      href={href ?? "#"}
       onClick={handleClick}
+      className="block"
     >
-      <Card className="flex">
-        <div className="flex-none">
-          <Avatar className="border size-12 m-auto bg-muted-background dark:bg-foreground">
-            <AvatarImage
-              src={logoUrl}
-              alt={altText}
-              className="object-contain"
-            />
-            <AvatarFallback>{altText[0]}</AvatarFallback>
-          </Avatar>
-        </div>
-        <div className="flex-grow ml-4 items-center flex-col group">
-          <CardHeader>
-            <div className="flex items-center justify-between gap-x-2 text-base">
-              <h3 className="inline-flex items-center justify-center font-semibold leading-none text-xs sm:text-sm">
-                {title}
+      <Card
+        className={cn(
+          "group flex gap-4 rounded-2xl border p-4",
+          "transition-all duration-300",
+          "hover:shadow-md"
+        )}
+      >
+        {/* Logo */}
+        <Avatar className="h-12 w-12 border bg-muted">
+          <AvatarImage
+            src={logoUrl}
+            alt={altText}
+            className="object-contain"
+          />
+          <AvatarFallback>{altText[0]}</AvatarFallback>
+        </Avatar>
+
+        {/* Content */}
+        <div className="min-w-0 flex-1">
+          {/* Header */}
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <h3 className="truncate text-sm font-semibold">
+                  {title}
+                </h3>
+
                 {badges && (
-                  <span className="inline-flex gap-x-1">
+                  <div className="flex gap-1">
                     {badges.map((badge, index) => (
                       <Badge
-                        variant="secondary"
-                        className="align-middle text-xs"
                         key={index}
+                        variant="secondary"
+                        className="text-[10px]"
                       >
                         {badge}
                       </Badge>
                     ))}
-                  </span>
+                  </div>
                 )}
-                <ChevronRightIcon
-                  className={cn(
-                    "size-4 translate-x-0 transform opacity-0 transition-all duration-300 ease-out group-hover:translate-x-1 group-hover:opacity-100",
-                    isExpanded ? "rotate-90" : "rotate-0"
-                  )}
-                />
-              </h3>
-              <div className="text-xs sm:text-sm tabular-nums text-muted-foreground text-right">
-                {period}
+
+                {isExpandable && (
+                  <ChevronRightIcon
+                    className={cn(
+                      "h-4 w-4 text-muted-foreground",
+                      "transition-transform duration-300",
+                      expanded && "rotate-90"
+                    )}
+                  />
+                )}
               </div>
+
+              {subtitle && (
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  {subtitle}
+                </p>
+              )}
             </div>
-            {subtitle && <div className="font-sans text-xs">{subtitle}</div>}
-          </CardHeader>
+
+            <div className="shrink-0 text-xs tabular-nums text-muted-foreground">
+              {period}
+            </div>
+          </div>
+
+          {/* Expandable Description */}
           {description && (
             <motion.div
-              initial={{ opacity: 0, height: 0 }}
+              initial={false}
               animate={{
-                opacity: isExpanded ? 1 : 0,
-
-                height: isExpanded ? "auto" : 0,
+                height: expanded ? "auto" : 0,
+                opacity: expanded ? 1 : 0,
               }}
               transition={{
-                duration: 0.7,
+                duration: 0.5,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="mt-2 text-xs sm:text-sm"
+              className="overflow-hidden"
             >
-              {description}
+              <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+                {description}
+              </p>
             </motion.div>
           )}
         </div>
       </Card>
     </Link>
   );
-};
+}
