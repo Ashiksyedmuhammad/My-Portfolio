@@ -15,6 +15,7 @@ export const DATA = {
     "JavaScript",
     "TypeScript",
     "React.js",
+    "Next.js",
     "Redux",
     "Node.js",
     "Express.js",
